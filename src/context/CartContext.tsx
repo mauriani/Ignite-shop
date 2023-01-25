@@ -16,6 +16,7 @@ export interface IProduct {
 
 interface CartContextType {
   addItemCart: (product: IProduct, productId: String) => void;
+  decrementItemCart: (productId: String) => void;
   productsBag: IProduct[];
   totalBagItems: number;
   totalPayable: String;
@@ -65,6 +66,29 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     }
   }
 
+  function decrementItemCart(productId: String) {
+    itemProductsBag.map((product) => {
+      if (product.id === productId) {
+        if (product.quantity > 1) {
+          const newItem = {
+            ...product,
+            quantity: product.quantity - 1,
+          };
+
+          setItemProductsBag([newItem]);
+        } else {
+          removeItem(productId);
+        }
+      }
+    });
+  }
+
+  function removeItem(productId: String) {
+    setItemProductsBag((state) =>
+      state.filter((item) => item.id !== productId)
+    );
+  }
+
   useEffect(() => {
     // número de itens adicionados a sacola
     const totalItem = itemProductsBag.reduce((sum, product) => {
@@ -92,6 +116,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     <CartContext.Provider
       value={{
         addItemCart,
+        decrementItemCart,
         productsBag: itemProductsBag,
         totalBagItems: totalCart,
         totalPayable: totalPayable,

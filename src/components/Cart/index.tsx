@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
-import { X, Bag } from "phosphor-react";
+import { X, Bag, Minus, Plus } from "phosphor-react";
 import axios from "axios";
 
 import { CartContext } from "../../context/CartContext";
@@ -20,7 +20,8 @@ import {
 } from "./styles";
 
 export function Cart() {
-  const { productsBag, totalBagItems, totalPayable } = useContext(CartContext);
+  const { productsBag, decrementItemCart, totalPayable, addItemCart } =
+    useContext(CartContext);
 
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false);
@@ -73,9 +74,19 @@ export function Cart() {
 
                   <CartProductDetails>
                     <p>{product.name}</p>
-                    <p>Items {product.quantity}</p>
+                    {/* <p>{product.quantity} Items </p> */}
                     <strong>{product.price}</strong>
-                    <button>Remover</button>
+
+                    <div>
+                      <button onClick={() => addItemCart(product, product.id)}>
+                        <Plus size={20} />
+                      </button>
+
+                      <input type="number" readOnly value={product.quantity} />
+                      <button onClick={() => decrementItemCart(product.id)}>
+                        <Minus size={20} />
+                      </button>
+                    </div>
                   </CartProductDetails>
                 </CartProduct>
               ))
@@ -90,10 +101,10 @@ export function Cart() {
           {productsBag.length >= 1 && (
             <CartProductFooter>
               <Details>
-                <div>
+                {/* <div>
                   <span>Quantidades</span>
                   <p>{totalBagItems} itens</p>
-                </div>
+                </div> */}
 
                 <div>
                   <span>Valor total</span>

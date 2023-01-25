@@ -77,6 +77,7 @@ export const CartProductImage = styled("div", {
 export const CartProductDetails = styled("div", {
   display: "flex",
   flexDirection: "column",
+  width: "100%",
   height: "100%",
 
   p: {
@@ -90,14 +91,37 @@ export const CartProductDetails = styled("div", {
     fontWeight: 700,
   },
 
-  button: {
-    marginTop: "auto",
-    width: "max-content",
-    background: "none",
-    color: "$green500",
-    fontSize: "1rem",
-    fontWeight: 700,
-    border: "none",
+  div: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    height: "2.5rem",
+
+    marginTop: "0.8rem",
+
+    button: {
+      background: "$green500",
+      width: "2rem",
+      height: "2rem",
+      color: "$white",
+      border: "none",
+
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+
+      borderRadius: 3,
+    },
+
+    input: {
+      width: "2rem",
+      height: "2rem",
+      border: "none",
+      outline: "none",
+      background: "none",
+      color: "$gray100",
+      textAlign: "center !important",
+    },
   },
 });
 
