@@ -19,6 +19,7 @@ interface CartContextType {
   productsBag: IProduct[];
   totalBagItems: number;
   totalPayable: String;
+  isCreatingCheckout: boolean;
 }
 
 interface CartContextProviderProps {
@@ -32,26 +33,35 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   const [totalCart, setTotalCart] = useState(0);
   const [totalPayable, setTotalPayable] = useState("");
 
+  const [isCreatingCheckout, setIsCreatingCheckout] = useState(false);
+
   function addItemCart(product: IProduct, productId: String) {
-    // Verifica se o item existe
-    const isExisting = itemProductsBag.some(
-      (product) => product.id === productId
-    );
+    try {
+      setIsCreatingCheckout(true);
+      // Verifica se o item existe
+      const isExisting = itemProductsBag.some(
+        (product) => product.id === productId
+      );
 
-    // se não existir adiciona
-    if (!isExisting) {
-      setItemProductsBag((state) => [...state, product]);
-    }
-    // se existir altera a quantidade
-    else {
-      const newItem = itemProductsBag.map((product) => {
-        return {
-          ...product,
-          quantity: product.quantity + 1,
-        };
-      });
+      // se não existir adiciona
+      if (!isExisting) {
+        setItemProductsBag((state) => [...state, product]);
+      }
+      // se existir altera a quantidade
+      else {
+        const newItem = itemProductsBag.map((product) => {
+          return {
+            ...product,
+            quantity: product.quantity + 1,
+          };
+        });
 
-      setItemProductsBag(newItem);
+        setItemProductsBag(newItem);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsCreatingCheckout(false);
     }
   }
 
@@ -85,6 +95,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         productsBag: itemProductsBag,
         totalBagItems: totalCart,
         totalPayable: totalPayable,
+        isCreatingCheckout: isCreatingCheckout,
       }}
     >
       {children}

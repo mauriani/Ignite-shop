@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Head from "next/head";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
-
 import Stripe from "stripe";
 import axios from "axios";
 
+import { CartContext, IProduct } from "../../context/CartContext";
 import { stripe } from "../../lib/stripe";
 
 import {
@@ -21,29 +21,16 @@ interface ProductProps {
     name: string;
     imageUrl: string;
     price: string;
+    numberPrice: number;
     description: string;
     defaultPriceId: string;
+    quantity?: number;
+    priceUnitAmount: number;
   };
 }
 
 export default function Product({ products }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false);
-  async function handleBuyproduct() {
-    try {
-      setIsCreatingCheckoutSession(true);
-      const response = await axios.post("/api/checkout", {
-        priceId: products.defaultPriceId,
-      });
-      const { checkoutUrl } = response.data;
-
-      window.location.href = checkoutUrl;
-    } catch (err) {
-      setIsCreatingCheckoutSession(false);
-      // Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
-      alert("Falha ao redirecionar ao checkout");
-    }
-  }
+  const { addItemCart, isCreatingCheckout } = useContext(CartContext);
 
   const { isFallback } = useRouter();
 
@@ -68,10 +55,10 @@ export default function Product({ products }: ProductProps) {
           <p>{products.description}</p>
 
           <button
-            disabled={isCreatingCheckoutSession}
-            onClick={handleBuyproduct}
+            disabled={isCreatingCheckout}
+            onClick={() => addItemCart(products, products.id)}
           >
-            Comprar agora
+            Adicionar carrinho
           </button>
         </ProductDetails>
       </ProductContainer>
@@ -108,6 +95,8 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
         id: product.id,
         name: product.name,
         imageUrl: product.images[0],
+        quantity: 1,
+        priceUnitAmount: price.unit_amount ? price.unit_amount / 100 : 0,
         price: new Intl.NumberFormat("pt-BR", {
           style: "currency",
           currency: "BRL",

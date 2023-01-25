@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
 import { X, Bag } from "phosphor-react";
+import axios from "axios";
 
 import { CartContext } from "../../context/CartContext";
 
@@ -20,6 +21,29 @@ import {
 
 export function Cart() {
   const { productsBag, totalBagItems, totalPayable } = useContext(CartContext);
+
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false);
+
+  async function handleBuyproduct() {
+    try {
+      setIsCreatingCheckoutSession(true);
+
+      const response = await axios.post("/api/checkout", {
+        products: productsBag,
+      });
+
+      const { checkoutUrl } = response.data;
+
+      window.location.href = checkoutUrl;
+    } catch (err) {
+      console.log(err);
+      setIsCreatingCheckoutSession(false);
+      // Conectar com uma ferramenta de observabilidade (Datadog / Sentry)
+      alert("Falha ao redirecionar ao checkout");
+    }
+  }
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -76,7 +100,12 @@ export function Cart() {
                   <p>{totalPayable}</p>
                 </div>
               </Details>
-              <button>Finalizar compra</button>
+              <button
+                disabled={isCreatingCheckoutSession}
+                onClick={handleBuyproduct}
+              >
+                Finalizar compra
+              </button>
             </CartProductFooter>
           )}
         </CartContent>
