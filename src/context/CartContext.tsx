@@ -74,10 +74,8 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       })
       .reduce((total, currentValue) => total + currentValue, 0);
 
-    const totalPayFormat = formatPrice(totalPay);
-
     setTotalCart(totalItem);
-    setTotalPayable(totalPayFormat);
+    setTotalPayable(formatPrice(totalPay));
   }, [itemProductsBag]);
 
   return (
