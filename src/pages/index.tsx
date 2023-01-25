@@ -1,25 +1,29 @@
+import { useContext, MouseEvent } from "react";
 import Image from "next/image";
 import Head from "next/head";
 import Link from "next/link";
 import { GetStaticProps } from "next";
 import { useKeenSlider } from "keen-slider/react";
+import { ShoppingBag } from "phosphor-react";
 
 import "keen-slider/keen-slider.min.css";
 import { HomeContainer, Product } from "../styles/pages/home";
 import { stripe } from "../lib/stripe";
+import { CartContext, IProduct } from "../context/CartContext";
 
 import Stripe from "stripe";
 
 interface HomeProps {
-  products: {
-    id: string;
-    name: string;
-    imageUrl: string;
-    price: string;
-  }[];
+  products: IProduct[];
 }
 
 export default function Home({ products }: HomeProps) {
+  const { addItemCart } = useContext(CartContext);
+
+  function handleAddCart(product: IProduct, productId: string) {
+    addItemCart(product, productId);
+  }
+
   const [sliderRef] = useKeenSlider({
     breakpoints: {
       "(min-width: 768px)": {
@@ -46,12 +50,8 @@ export default function Home({ products }: HomeProps) {
       <HomeContainer ref={sliderRef} className={"keen-slider"}>
         {products.map((product) => {
           return (
-            <Link
-              key={product.id}
-              href={`product/${product.id}`}
-              prefetch={false}
-            >
-              <Product className="keen-slider__slide">
+            <Product className="keen-slider__slide" key={product.id}>
+              <Link href={`product/${product.id}`} prefetch={false}>
                 <Image
                   src={product.imageUrl}
                   width={520}
@@ -59,13 +59,19 @@ export default function Home({ products }: HomeProps) {
                   alt=""
                   layout="responsive"
                 />
+              </Link>
 
-                <footer>
+              <footer>
+                <div>
                   <strong>{product.name}</strong>
                   <span>{product.price}</span>
-                </footer>
-              </Product>
-            </Link>
+                </div>
+
+                <button onClick={() => handleAddCart(product, product.id)}>
+                  <ShoppingBag size={25} />
+                </button>
+              </footer>
+            </Product>
           );
         })}
       </HomeContainer>
@@ -78,13 +84,16 @@ export const getStaticProps: GetStaticProps = async () => {
     expand: ["data.default_price"],
   });
 
+  console.log(response);
+
   const products = response.data.map((product) => {
     const price = product.default_price as Stripe.Price;
-
+    console.log(product);
     return {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
+      quantity: 1,
       price: new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",
