@@ -41,6 +41,23 @@ export const CartProduct = styled("div", {
   display: "flex",
 });
 
+export const EmptyBag = styled("div", {
+  width: "100%",
+  height: "100%",
+
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+
+  p: {
+    color: "$gray300",
+    fontSize: "$md",
+    marginTop: "2rem",
+    marginBottom: "1rem",
+  },
+});
+
 export const CartProductImage = styled("div", {
   width: "6.3125rem",
   height: "5.8125rem",

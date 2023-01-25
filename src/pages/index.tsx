@@ -84,8 +84,6 @@ export const getStaticProps: GetStaticProps = async () => {
     expand: ["data.default_price"],
   });
 
-  console.log(response);
-
   const products = response.data.map((product) => {
     const price = product.default_price as Stripe.Price;
     console.log(product);
@@ -94,6 +92,7 @@ export const getStaticProps: GetStaticProps = async () => {
       name: product.name,
       imageUrl: product.images[0],
       quantity: 1,
+      priceUnitAmount: price.unit_amount ? price.unit_amount / 100 : 0,
       price: new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",

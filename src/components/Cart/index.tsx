@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
-import { X } from "phosphor-react";
+import { X, Bag } from "phosphor-react";
 
 import { CartContext } from "../../context/CartContext";
 
@@ -11,6 +11,7 @@ import {
   CartContent,
   CartClose,
   CartProduct,
+  EmptyBag,
   CartProductImage,
   CartProductDetails,
   CartProductFooter,
@@ -18,7 +19,7 @@ import {
 } from "./styles";
 
 export function Cart() {
-  const { productsBag } = useContext(CartContext);
+  const { productsBag, totalBagItems, totalPayable } = useContext(CartContext);
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -34,43 +35,50 @@ export function Cart() {
           <h2>Sacola de compras</h2>
 
           <section>
-            {/* <p>Parece que o seu carrinho está vazio!</p> */}
+            {productsBag.length >= 1 ? (
+              productsBag.map((product) => (
+                <CartProduct key={product.id}>
+                  <CartProductImage>
+                    <Image
+                      src={product.imageUrl}
+                      width={100}
+                      height={93}
+                      alt=""
+                    />
+                  </CartProductImage>
 
-            {productsBag.map((product) => (
-              <CartProduct key={product.id}>
-                <CartProductImage>
-                  <Image
-                    src={product.imageUrl}
-                    width={100}
-                    height={93}
-                    alt=""
-                  />
-                </CartProductImage>
-
-                <CartProductDetails>
-                  <p>{product.name}</p>
-                  <p>Items {product.quantity}</p>
-                  <strong>R$ {product.price}</strong>
-                  <button>Remover</button>
-                </CartProductDetails>
-              </CartProduct>
-            ))}
+                  <CartProductDetails>
+                    <p>{product.name}</p>
+                    <p>Items {product.quantity}</p>
+                    <strong>{product.price}</strong>
+                    <button>Remover</button>
+                  </CartProductDetails>
+                </CartProduct>
+              ))
+            ) : (
+              <EmptyBag>
+                <p>Parece que o seu carrinho está vazio!</p>
+                <Bag size={32} />
+              </EmptyBag>
+            )}
           </section>
 
-          <CartProductFooter>
-            <Details>
-              <div>
-                <span>Quantidades</span>
-                <p>2 itens</p>
-              </div>
+          {productsBag.length >= 1 && (
+            <CartProductFooter>
+              <Details>
+                <div>
+                  <span>Quantidades</span>
+                  <p>{totalBagItems} itens</p>
+                </div>
 
-              <div>
-                <span>Valor total</span>
-                <p>R$ 100.00</p>
-              </div>
-            </Details>
-            <button>Finalizar compra</button>
-          </CartProductFooter>
+                <div>
+                  <span>Valor total</span>
+                  <p>{totalPayable}</p>
+                </div>
+              </Details>
+              <button>Finalizar compra</button>
+            </CartProductFooter>
+          )}
         </CartContent>
       </Dialog.Portal>
     </Dialog.Root>

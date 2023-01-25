@@ -9,12 +9,12 @@ import { ButtonContainer } from "./styles";
 type CartButtonProps = ComponentProps<typeof ButtonContainer>;
 
 export function CartButton({ ...rest }: CartButtonProps) {
-  const { totalBag } = useContext(CartContext);
+  const { totalBagItems } = useContext(CartContext);
 
   return (
     <ButtonContainer {...rest}>
       <ShoppingBag size={25} />
-      {totalBag >= 1 && <span>{totalBag}</span>}
+      {totalBagItems >= 1 && <span>{totalBagItems}</span>}
     </ButtonContainer>
   );
 }

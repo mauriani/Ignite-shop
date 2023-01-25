@@ -1,5 +1,7 @@
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 
+import { formatPrice } from "../utils/format";
+
 export interface IProduct {
   id: string;
   name: string;
@@ -9,12 +11,14 @@ export interface IProduct {
   description: string;
   defaultPriceId: string;
   quantity?: number;
+  priceUnitAmount: number;
 }
 
 interface CartContextType {
   addItemCart: (product: IProduct, productId: String) => void;
   productsBag: IProduct[];
-  totalBag: number;
+  totalBagItems: number;
+  totalPayable: String;
 }
 
 interface CartContextProviderProps {
@@ -26,6 +30,7 @@ export const CartContext = createContext({} as CartContextType);
 export function CartContextProvider({ children }: CartContextProviderProps) {
   const [itemProductsBag, setItemProductsBag] = useState<IProduct[]>([]);
   const [totalCart, setTotalCart] = useState(0);
+  const [totalPayable, setTotalPayable] = useState("");
 
   function addItemCart(product: IProduct, productId: String) {
     // Verifica se o item existe
@@ -51,6 +56,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   }
 
   useEffect(() => {
+    // número de itens adicionados a sacola
     const totalItem = itemProductsBag.reduce((sum, product) => {
       if (product.quantity >= 1) {
         return (sum = sum + 1);
@@ -58,7 +64,20 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       return sum;
     }, 0);
 
+    // total a pagar
+    const totalPay: number = itemProductsBag
+      .filter((product) => product.quantity >= 1)
+      .map((product) => {
+        if (product.quantity > 0)
+          return product.quantity * product.priceUnitAmount;
+        else return 0;
+      })
+      .reduce((total, currentValue) => total + currentValue, 0);
+
+    const totalPayFormat = formatPrice(totalPay);
+
     setTotalCart(totalItem);
+    setTotalPayable(totalPayFormat);
   }, [itemProductsBag]);
 
   return (
@@ -66,7 +85,8 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       value={{
         addItemCart,
         productsBag: itemProductsBag,
-        totalBag: totalCart,
+        totalBagItems: totalCart,
+        totalPayable: totalPayable,
       }}
     >
       {children}
