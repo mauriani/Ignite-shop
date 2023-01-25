@@ -37,7 +37,7 @@ export const CartProduct = styled("div", {
   height: "5.8125rem",
   gap: "1.25rem",
   alignItems: "center",
-
+  marginBottom: "1.25rem",
   display: "flex",
 });
 
