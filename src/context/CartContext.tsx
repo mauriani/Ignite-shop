@@ -72,28 +72,37 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     }
   }
 
+  // decrement and remove item
   function decrementItemCart(productId: String) {
-    itemProductsBag.map((product) => {
-      if (product.id === productId) {
-        if (product.quantity === 1) {
-          console.log(product.quantity);
-          removeItem(productId);
-        } else {
-          const newItem = {
-            ...product,
-            quantity: product.quantity - 1,
-          };
+    const products = [...itemProductsBag];
 
-          setItemProductsBag([newItem]);
-        }
+    const newProduct = products.map((product) => {
+      // compara o id e se a quant é maior que 1
+      if (productId === product.id && product.quantity > 1) {
+        return {
+          ...product,
+          quantity: product.quantity - 1,
+        };
+      }
+      // compara o id e se quant é igual a 1
+      if (productId === product.id && product.quantity == 1) {
+        return {
+          ...product,
+          quantity: 0,
+        };
+      }
+      // caso nao entre nos if retorna o restante do array
+      else {
+        return {
+          ...product,
+        };
       }
     });
-  }
 
-  function removeItem(productId: String) {
-    setItemProductsBag((state) =>
-      state.filter((item) => item.id !== productId)
-    );
+    // remove o item que possui quantidade igual a zero e retorna uma lista nova
+    let newList = newProduct.filter((item) => item.quantity != 0);
+
+    setItemProductsBag(newList);
   }
 
   useEffect(() => {
