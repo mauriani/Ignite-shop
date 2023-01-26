@@ -20,10 +20,6 @@ interface HomeProps {
 export default function Home({ products }: HomeProps) {
   const { addItemCart } = useContext(CartContext);
 
-  function handleAddCart(product: IProduct, productId: string) {
-    addItemCart(product, productId);
-  }
-
   const [sliderRef] = useKeenSlider({
     breakpoints: {
       "(min-width: 768px)": {
@@ -67,7 +63,7 @@ export default function Home({ products }: HomeProps) {
                   <span>{product.price}</span>
                 </div>
 
-                <button onClick={() => handleAddCart(product, product.id)}>
+                <button onClick={() => addItemCart(product, product.id)}>
                   <ShoppingBag size={25} />
                 </button>
               </footer>
