@@ -101,11 +101,6 @@ export function Cart() {
           {productsBag.length >= 1 && (
             <CartProductFooter>
               <Details>
-                {/* <div>
-                  <span>Quantidades</span>
-                  <p>{totalBagItems} itens</p>
-                </div> */}
-
                 <div>
                   <span>Valor total</span>
                   <p>{totalPayable}</p>

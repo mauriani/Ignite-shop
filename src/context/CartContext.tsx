@@ -44,17 +44,26 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         (product) => product.id === productId
       );
 
+      console.log(productId);
+      console.log(isExisting);
+
       // se não existir adiciona
-      if (!isExisting) {
+      if (isExisting == false) {
         setItemProductsBag((state) => [...state, product]);
       }
       // se existir altera a quantidade
       else {
         const newItem = itemProductsBag.map((product) => {
-          return {
-            ...product,
-            quantity: product.quantity + 1,
-          };
+          if (product.id === productId) {
+            return {
+              ...product,
+              quantity: product.quantity + 1,
+            };
+          } else {
+            return {
+              ...product,
+            };
+          }
         });
 
         setItemProductsBag(newItem);
