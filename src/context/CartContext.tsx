@@ -75,15 +75,16 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   function decrementItemCart(productId: String) {
     itemProductsBag.map((product) => {
       if (product.id === productId) {
-        if (product.quantity > 1) {
+        if (product.quantity === 1) {
+          console.log(product.quantity);
+          removeItem(productId);
+        } else {
           const newItem = {
             ...product,
             quantity: product.quantity - 1,
           };
 
           setItemProductsBag([newItem]);
-        } else {
-          removeItem(productId);
         }
       }
     });
