@@ -5,7 +5,7 @@ import Link from "next/link";
 import React from "react";
 import Stripe from "stripe";
 import { stripe } from "../lib/stripe";
-import { ProductDetails } from "../styles/pages/product";
+
 
 import { ImageContainer, SuccessContainer } from "../styles/pages/success";
 
