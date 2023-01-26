@@ -126,6 +126,14 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
 
     setTotalCart(totalItem);
     setTotalPayable(formatPrice(totalPay));
+
+    var sum = 0;
+
+    for (var i = 0; i < itemProductsBag.length; i++) {
+      sum += itemProductsBag[i].quantity;
+    }
+
+    console.log(sum);
   }, [itemProductsBag]);
 
   return (

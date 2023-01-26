@@ -6,12 +6,19 @@ import React from "react";
 import Stripe from "stripe";
 import { stripe } from "../lib/stripe";
 
-
-import { ImageContainer, SuccessContainer } from "../styles/pages/success";
+import {
+  ImageContainer,
+  ImageContent,
+  SuccessContainer,
+} from "../styles/pages/success";
 
 interface SuccessProps {
   customerName: string;
-  product: [];
+  product: {
+    id: string;
+    imageUrl: string;
+    quantity: number;
+  }[];
 }
 
 export default function Success({ customerName, product }: SuccessProps) {
@@ -27,13 +34,15 @@ export default function Success({ customerName, product }: SuccessProps) {
 
         <ImageContainer>
           {product.map((item, key) => (
-            <Image key={key} src={item} width={120} height={120} alt="" />
+            <ImageContent key={key}>
+              <Image src={item.imageUrl} width={120} height={120} alt="" />
+            </ImageContent>
           ))}
         </ImageContainer>
 
         <p>
-          Uhuul <strong>{customerName}</strong>, sua{" "}
-          <strong>{product.length}</strong> já está a caminho da sua casa.{" "}
+          Uhuul <strong>{customerName}</strong>, sua(s) camisa(s) já estão a
+          caminho da sua casa.{" "}
         </p>
 
         <Link href={"/"}>Voltar ao catálogo</Link>
@@ -70,10 +79,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   // dessa forma eu digo que só temos um item, pois nossa plataforma não permite a compra de mais de um
   const product = session.line_items.data.map((item) => {
     const product = item.price.product as Stripe.Product;
-    return product.images[0];
+    return {
+      id: item.id,
+      imageUrl: product.images[0],
+      quantity: item.quantity,
+    };
   });
-
-  console.log(product);
 
   return {
     props: {
