@@ -50,7 +50,9 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       }
       // se existir altera a quantidade
       else {
-        const newItem = itemProductsBag.map((product) => {
+        const products = [...itemProductsBag];
+
+        const newItem = products.map((product) => {
           if (product.id === productId) {
             return {
               ...product,
