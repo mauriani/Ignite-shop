@@ -8,7 +8,6 @@
 	<a href="#instalação">Instalação</a>
 </p>
 
-
 ## 🤖 Tecnologias
 Esse foi desenvolvido com as seguintes tecnologias:
 
@@ -21,7 +20,7 @@ Ignite shop foi desenvolvido durante o módulo 04 da trilha de reactjs. Nesse m�
 utilizar um api de pagamento como o stripe. O ignite shop consiste na e-commerce de camisas.
 
 
-### No terminal, rodar
+## Instalação
 ```sh
 # Clonar esse repositório
 git clone https://github.com/mauriani/Ignite-shop
