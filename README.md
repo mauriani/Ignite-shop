@@ -36,6 +36,6 @@ cd Ignite-shop
 yarn install
 
 # Rodar
-expo start
+yarn dev
 ```
 
