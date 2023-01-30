@@ -15,7 +15,7 @@
 ## 🤖 Tecnologias
 Esse foi desenvolvido com as seguintes tecnologias:
 
-- [React JS](https://pt-br.reactjs.org/)
+- [ReactJs](https://pt-br.reactjs.org/)
 - [NextJs](https://nextjs.org/)
 - [Stripe](https://stripe.com/br)
 
